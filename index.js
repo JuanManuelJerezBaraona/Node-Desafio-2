@@ -28,7 +28,7 @@ app.put("/canciones/:id", (req, res) => {
     const { id } = req.params
     const cancion = req.body
     const canciones = JSON.parse(fs.readFileSync("repertorio.json"))
-    const index = canciones.findIndex(p => p.id == id)
+    const index = canciones.findIndex(c => c.id == id)
     canciones[index] = cancion
     fs.writeFileSync("repertorio.json", JSON.stringify(canciones))
     res.send("Canción modificada con éxito")
@@ -37,7 +37,7 @@ app.put("/canciones/:id", (req, res) => {
 app.delete("/canciones/:id", (req, res) => {
     const { id } = req.params
     const canciones = JSON.parse(fs.readFileSync("repertorio.json"))
-    const index = canciones.findIndex(p => p.id == id)
+    const index = canciones.findIndex(c => c.id == id)
     canciones.splice(index, 1)
     fs.writeFileSync("repertorio.json", JSON.stringify(canciones))
     res.send("Canción eliminada con éxito")
