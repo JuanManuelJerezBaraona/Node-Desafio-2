@@ -3,6 +3,8 @@ import express from "express";
 import fs from "fs";
 import cors from "cors";
 
+const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
+
 const app = express();
 
 app.use(express.json());
@@ -23,7 +25,6 @@ app.get("/", (req, res) => {
 
 app.get("/canciones", (req, res) => {
     try {
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
         res.status(200).json(canciones);
     } catch (error) {
         res.status(500).json({ error: "Error al procesar la solicitud" });
@@ -34,7 +35,6 @@ app.get("/canciones", (req, res) => {
 app.post("/canciones", (req, res) => {
     try {
         const cancion = req.body;
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
         canciones.push(cancion);
         fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
         res.status(200).send("Canción modificada con éxito");
@@ -48,7 +48,6 @@ app.put("/canciones/:id", (req, res) => {
     try {
         const { id } = req.params;
         const cancion = req.body;
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
         const index = canciones.findIndex((c) => c.id == id);
         canciones[index] = cancion;
         fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
@@ -62,7 +61,6 @@ app.put("/canciones/:id", (req, res) => {
 app.delete("/canciones/:id", (req, res) => {
     try {
         const { id } = req.params;
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
         const index = canciones.findIndex((c) => c.id == id);
         canciones.splice(index, 1);
         fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
