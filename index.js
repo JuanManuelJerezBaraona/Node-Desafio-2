@@ -3,6 +3,10 @@ import express from "express";
 import fs from "fs";
 import cors from "cors";
 
+// retomamos lo de Valentina Muñoz para generar constante de canciones parseadas
+const fileContent = fs.readFileSync("repertorio.json", "utf8");
+const cancionesParse = JSON.parse(fileContent);
+
 const app = express();
 
 app.use(express.json());
@@ -20,10 +24,8 @@ app.get("/", (req, res) => {
 
 app.get("/canciones", (req, res) => {
     try {
-        const canciones = JSON.parse(
-            fs.readFileSync("repertorio.json", "utf8")
-        );
-        res.status(200).json(canciones);
+        cancionesParse;
+        res.status(200).json(cancionesParse);
     } catch (error) {
         res.status(500).json({ error: "Error al procesar la solicitud" });
         console.error("Error al procesar la solicitud", error);
@@ -33,12 +35,10 @@ app.get("/canciones", (req, res) => {
 app.post("/canciones", (req, res) => {
     try {
         const cancion = req.body;
-        const canciones = JSON.parse(
-            fs.readFileSync("repertorio.json", "utf8")
-        );
+        cancionesParse;
         fs.writeFileSync(
             "repertorio.json",
-            JSON.stringify([...canciones, cancion])
+            JSON.stringify([...cancionesParse, cancion])
         );
         res.status(200).send("Canción agregada con éxito");
     } catch (error) {
@@ -51,11 +51,9 @@ app.put("/canciones/:id", (req, res) => {
     try {
         const { id } = req.params;
         const cancion = req.body;
-        const canciones = JSON.parse(
-            fs.readFileSync("repertorio.json", "utf8")
-        );
+        cancionesParse;
         const index = canciones.findIndex((c) => c.id == id);
-        canciones[index] = cancion;
+        cancionesParse[index] = cancion;
         fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
         res.status(201).send("¡Canción agregada con éxito!");
     } catch (error) {
@@ -67,9 +65,9 @@ app.put("/canciones/:id", (req, res) => {
 app.delete("/canciones/:id", (req, res) => {
     try {
         const { id } = req.params;
-        const index = canciones.findIndex((c) => c.id == id);
-        canciones.splice(index, 1);
-        fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
+        const index = cancionesParse.findIndex((c) => c.id == id);
+        cancionesParse.splice(index, 1);
+        fs.writeFileSync("repertorio.json", JSON.stringify(cancionesParse));
         res.status(204).send("Canción modificada con éxito");
     } catch (error) {
         res.status(500).json({ error: "Error al procesar la solicitud" });
