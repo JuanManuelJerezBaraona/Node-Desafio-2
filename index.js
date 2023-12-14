@@ -10,10 +10,11 @@ app.use(cors());
 
 app.get("/", (req, res) => {
     try {
-        res.status(200).sendFile(__dirname + "/index.html");
+        res.sendFile(__dirname + "/index.html");
+        res.status(200);
     } catch (error) {
-        res.status(404).sendFile({ error: "Error al procesar la solicitud" });
-        console.error("Error al procesar la solicitud:", error);
+        res.json({ message: "Recurso no disponible" });
+        res.status(404);
     }
 });
 
