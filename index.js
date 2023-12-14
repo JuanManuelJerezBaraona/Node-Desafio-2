@@ -3,8 +3,6 @@ import express from "express";
 import fs from "fs";
 import cors from "cors";
 
-const canciones = JSON.parse(fs.readFileSync("repertorio.json", "utf8"));
-
 const app = express();
 
 app.use(express.json());
@@ -42,9 +40,6 @@ app.post("/canciones", (req, res) => {
             JSON.stringify([...canciones, cancion])
         );
         res.status(200).send("Canción agregada con éxito");
-        canciones.push(cancion);
-        fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
-        res.status(200).send("Canción modificada con éxito");
     } catch (error) {
         res.status(500).json({ error: "Error al procesar la solicitud" });
         console.error("Error al procesar la solicitud", error);
